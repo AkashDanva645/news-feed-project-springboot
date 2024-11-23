@@ -12,6 +12,7 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class AdminLikeManager implements AdminEntityManager {
     @Autowired
     private PostRepository postRepo;
 
+
     @Override
     public AppEntity create(Map<String, Object> reqBody) {
         AdminCreateLikeRequest createLikeRequest = new AdminCreateLikeRequest(reqBody);
@@ -39,6 +41,8 @@ public class AdminLikeManager implements AdminEntityManager {
         }
         like.setUser(user.get());
 
+        System.out.println("Hello");
+
         Optional<Post> post = postRepo.findById(createLikeRequest.getPostId());
         if (post.isEmpty()) {
             throw new NotFoundException("Post not found with Id: " + createLikeRequest.getPostId());
@@ -48,23 +52,32 @@ public class AdminLikeManager implements AdminEntityManager {
         return likeRepo.save(like);
     }
 
+
     @Override
     public AppEntity update(Map<String, Object> reqBody) {
         return null;
     }
+
 
     @Override
     public AppEntity delete(Map<String, Object> reqBody) {
         return null;
     }
 
+
     @Override
     public List<AppEntity> getAll() {
-        return null;
+        List<AppEntity> res = new ArrayList<>(likeRepo.findAll());
+        return res;
     }
+
 
     @Override
     public AppEntity getOne(String id) {
-        return null;
+        Optional<Like> x = likeRepo.findById(id);
+        if (x.isEmpty()) {
+            throw new NotFoundException("Like not found with Id: " + id);
+        }
+        return x.get();
     }
 }

@@ -13,6 +13,7 @@ import com.example.posts_service.services.AdminEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,12 +60,17 @@ public class AdminPostManager implements AdminEntityManager {
 
     @Override
     public List<AppEntity> getAll() {
-        return null;
+        List<AppEntity> res = new ArrayList<>(postRepo.findAll());
+        return res;
     }
 
 
     @Override
     public AppEntity getOne(String id) {
-        return null;
+        Optional<Post> x = postRepo.findById(id);
+        if (x.isEmpty()) {
+            throw new NotFoundException("Post not found with Id: " + id);
+        }
+        return x.get();
     }
 }

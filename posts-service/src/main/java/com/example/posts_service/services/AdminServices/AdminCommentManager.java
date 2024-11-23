@@ -3,10 +3,7 @@ package com.example.posts_service.services.AdminServices;
 import com.example.posts_service.dtos.exceptions.NotFoundException;
 import com.example.posts_service.dtos.exceptions.NotValidException;
 import com.example.posts_service.dtos.requests.admin_requests.AdminCreateCommentRequest;
-import com.example.posts_service.entities.AppEntity;
-import com.example.posts_service.entities.Comment;
-import com.example.posts_service.entities.Post;
-import com.example.posts_service.entities.User;
+import com.example.posts_service.entities.*;
 import com.example.posts_service.repositories.CommentRepository;
 import com.example.posts_service.repositories.PostRepository;
 import com.example.posts_service.repositories.UserRepository;
@@ -14,6 +11,7 @@ import com.example.posts_service.services.AdminEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,12 +66,17 @@ public class AdminCommentManager implements AdminEntityManager {
 
     @Override
     public List<AppEntity> getAll() {
-        return null;
+        List<AppEntity> res = new ArrayList<>(commentRepo.findAll());
+        return res;
     }
 
 
     @Override
     public AppEntity getOne(String id) {
-        return null;
+        Optional<Comment> x = commentRepo.findById(id);
+        if (x.isEmpty()) {
+            throw new NotFoundException("Comment not found with Id: " + id);
+        }
+        return x.get();
     }
 }

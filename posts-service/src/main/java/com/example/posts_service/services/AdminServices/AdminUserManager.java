@@ -1,5 +1,6 @@
 package com.example.posts_service.services.AdminServices;
 
+import com.example.posts_service.dtos.exceptions.NotFoundException;
 import com.example.posts_service.dtos.exceptions.NotValidException;
 import com.example.posts_service.dtos.requests.admin_requests.AdminCreateUserRequest;
 import com.example.posts_service.entities.AppEntity;
@@ -21,6 +22,7 @@ public class AdminUserManager implements AdminEntityManager {
     @Autowired
     private UserRepository userRepo;
 
+
     @Override
     public AppEntity create(Map<String, Object> reqBody) {
         AdminCreateUserRequest createUserRequest = new AdminCreateUserRequest(reqBody);
@@ -33,15 +35,18 @@ public class AdminUserManager implements AdminEntityManager {
         return userRepo.save(user);
     }
 
+
     @Override
     public AppEntity update(Map<String, Object> reqBody) {
         return new User();
     }
 
+
     @Override
     public AppEntity delete(Map<String, Object> reqBody) {
         return new User();
     }
+
 
     @Override
     public List<AppEntity> getAll() {
@@ -49,8 +54,13 @@ public class AdminUserManager implements AdminEntityManager {
         return res;
     }
 
+
     @Override
     public AppEntity getOne(String id) {
-        return new User();
+        Optional<User> x = userRepo.findById(id);
+        if (x.isEmpty()) {
+            throw new NotFoundException("User not found with Id: " + id);
+        }
+        return x.get();
     }
 }

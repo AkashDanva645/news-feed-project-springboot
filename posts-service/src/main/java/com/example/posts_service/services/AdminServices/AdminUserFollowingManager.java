@@ -3,10 +3,7 @@ package com.example.posts_service.services.AdminServices;
 import com.example.posts_service.dtos.exceptions.NotFoundException;
 import com.example.posts_service.dtos.exceptions.NotValidException;
 import com.example.posts_service.dtos.requests.admin_requests.AdminCreateUserFollowingRequest;
-import com.example.posts_service.entities.AppEntity;
-import com.example.posts_service.entities.Post;
-import com.example.posts_service.entities.User;
-import com.example.posts_service.entities.UserFollowing;
+import com.example.posts_service.entities.*;
 import com.example.posts_service.repositories.UserFollowingRepository;
 import com.example.posts_service.repositories.UserRepository;
 import com.example.posts_service.services.AdminEntityManager;
@@ -15,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AdminUserFollowingManager implements AdminEntityManager {
@@ -66,12 +60,17 @@ public class AdminUserFollowingManager implements AdminEntityManager {
 
     @Override
     public List<AppEntity> getAll() {
-        return null;
+        List<AppEntity> res = new ArrayList<>(userFollowingRepo.findAll());
+        return res;
     }
 
 
     @Override
     public AppEntity getOne(String id) {
-        return null;
+        Optional<UserFollowing> x = userFollowingRepo.findById(id);
+        if (x.isEmpty()) {
+            throw new NotFoundException("UserFollowing not found with Id: " + id);
+        }
+        return x.get();
     }
 }
