@@ -2,6 +2,8 @@ package com.example.posts_service.security;
 
 import com.example.posts_service.dtos.exceptions.NotValidException;
 import com.example.posts_service.dtos.exceptions.UnauthorizedException;
+import com.example.posts_service.entities.User;
+import com.example.posts_service.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -19,12 +21,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserRepository userRepo;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,7 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = jwtUtils.extractUsername(token);
                 List<GrantedAuthority> authorityList = jwtUtils.extractAuthorities(token);
 
-                JwtAuthentication authentication = new JwtAuthentication(username, authorityList, true);
+                Optional<User> user = userRepo.findByUsername(username);
+                if (!username.equals("admin") && user.isEmpty()) {
+                    throw new RuntimeException("User does not exist.");
+                }
+
+                JwtAuthentication authentication = new JwtAuthentication(user.get().getUsername(), authorityList, true);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

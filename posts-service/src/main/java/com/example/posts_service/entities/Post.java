@@ -7,8 +7,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -40,6 +41,11 @@ public class Post implements AppEntity {
     @UpdateTimestamp
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private Set<Like> likes = new HashSet<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private Set<Comment> comments = new HashSet<>();
 
     public String getOwnerId() {
         // for fetching only userId in json when requesting post data, JsonIgnore will ignore the whole user object.

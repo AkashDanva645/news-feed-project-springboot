@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +15,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "user_following")
+@Table(
+        name = "user_following",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"})
+)
 public class UserFollowing implements AppEntity {
 
     @Id
@@ -44,9 +46,9 @@ public class UserFollowing implements AppEntity {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Column
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 }

@@ -22,7 +22,7 @@ public class PostsServiceManager {
     @Value("${post.service.url}")
     private String POST_SERVICE_URL;
 
-    private static final String CREATE_USER_IN_POSTS_API_URL = "/s2s/createUser";
+    private static final String CREATE_USER_IN_POSTS_API_URL = "/api/v1/s2s/createUser";
 
     public boolean createUserInPosts(CreateUserInPostsRequestDTO requestDTO) {
         ResponseEntity<CreateUserInPostsResponseDTO> response = restTemplate.postForEntity(POST_SERVICE_URL + CREATE_USER_IN_POSTS_API_URL, requestDTO, CreateUserInPostsResponseDTO.class);

@@ -53,7 +53,7 @@ public class AuthenticationController {
         GeneratedTokenDTO tokenDTO = jwtUtils.generateTokenAfterAuthentication(payload);
         userRepo.save(user);
 
-        CreateUserInPostsRequestDTO createUserInPostsRequestDTO = new CreateUserInPostsRequestDTO(user.getUsername(), user.getEmail(), reqBody.getUsername(), null);
+        CreateUserInPostsRequestDTO createUserInPostsRequestDTO = new CreateUserInPostsRequestDTO(user.getUsername(), user.getEmail(), reqBody.getFirstname(), reqBody.getLastname());
         boolean isUserCreatedInPosts = postsServiceManager.createUserInPosts(createUserInPostsRequestDTO);
         if (!isUserCreatedInPosts) {
             throw new RuntimeException("User not created in Posts.");
